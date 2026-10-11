@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { media } from "@/lib/media";
 import { EASE_EXPO, INTRO_DELAY } from "@/lib/motion";
 import LineReveal from "@/components/ui/LineReveal";
@@ -12,10 +12,12 @@ import { MAP_URL, WHATSAPP_URL, studio } from "@/lib/studio";
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
+  const sceneInView = useInView(ref, { amount: 0.05 });
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
 
-  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", reduceMotion ? "0%" : "22%"]);
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 1.08]);
+  const imageY = useTransform(scrollYProgress, [0, 1], ["0%", reduceMotion ? "0%" : "12%"]);
+  const imageX = useTransform(scrollYProgress, [0, 1], ["0%", reduceMotion ? "0%" : "-5%"]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 1.14]);
   const contentY = useTransform(scrollYProgress, [0, 1], ["0%", reduceMotion ? "0%" : "-18%"]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, reduceMotion ? 1 : 0]);
   const veil = useTransform(scrollYProgress, [0, 1], [0, 0.6]);
@@ -32,29 +34,31 @@ export default function Hero() {
       id="top"
       ref={ref}
       aria-labelledby="hero-title"
-      className="relative isolate flex h-[100svh] min-h-[740px] md:min-h-[780px] flex-col overflow-hidden bg-bg"
+      className="hero-section relative isolate flex h-[100svh] min-h-[780px] flex-col overflow-hidden bg-bg"
     >
-      <motion.div style={{ y: imageY, scale: imageScale }} className="absolute inset-0 -z-20 will-change-transform">
+      <motion.div style={{ x: imageX, y: imageY, scale: imageScale }} className="hero-scene absolute -z-20 will-change-transform">
         <motion.div
-          initial={reduceMotion ? false : { scale: 1.12, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 2.4, ease: EASE_EXPO, delay: d - 0.2 }}
+          initial={reduceMotion ? false : { scale: 1.16, x: "8%", opacity: 0 }}
+          animate={{ scale: 1, x: "0%", opacity: 1 }}
+          transition={{ duration: 2.2, ease: EASE_EXPO, delay: d }}
           className="absolute inset-0"
         >
+          <motion.div className="absolute inset-0" animate={sceneInView && !reduceMotion ? { scale: [1, 1.045, 1], x: ["0%", "-1.5%", "0%"] } : { scale: 1, x: "0%" }} transition={{ duration: reduceMotion || !sceneInView ? 0 : 16, ease: "easeInOut", repeat: sceneInView && !reduceMotion ? Infinity : 0 }}>
           <Image
             src={media.hero.src}
             alt={media.hero.alt}
             fill
             priority
-            sizes="100vw"
-            className="object-contain object-[center_15%] md:object-cover md:object-[68%_center]"
+            sizes="(max-width: 767px) 900px, 100vw"
+            className="hero-scene-image object-cover"
           />
+          </motion.div>
+          <div className="hero-scene-edge absolute inset-0 md:hidden" aria-hidden />
         </motion.div>
       </motion.div>
 
       <div aria-hidden className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/70 to-bg/0 md:via-bg/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/10 to-bg/50" />
+        <div className="hero-veil absolute inset-0" />
         <div className="animate-light-drift absolute -top-1/4 left-1/4 h-[70%] w-[60%] rounded-full bg-[radial-gradient(closest-side,rgba(180,200,220,0.10),transparent)] blur-2xl" />
         <motion.div style={{ opacity: veil }} className="absolute inset-0 bg-bg" />
         <div className="grid-overlay absolute inset-0 opacity-60" />
@@ -62,8 +66,9 @@ export default function Hero() {
 
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="container-site relative flex flex-1 flex-col justify-end pb-28 pt-28 md:pb-28 md:pt-36"
+        className="hero-content container-site relative flex flex-1 flex-col justify-between pb-20 pt-28 md:justify-end md:pb-28 md:pt-36"
       >
+        <div>
         <motion.p {...fade(0)} className="meta mb-4 flex items-center gap-3 md:mb-6">
           <span className="h-1.5 w-1.5 bg-accent" aria-hidden />
           {studio.hero.eyebrow} · {studio.city}
@@ -79,13 +84,14 @@ export default function Hero() {
           className="display-xl hero-heading text-fg"
           lineClassName="[&:nth-child(1)]:text-fg"
         />
+        </div>
 
-        <div className="mt-6 flex flex-col gap-6 md:mt-8 md:flex-row md:items-end md:justify-between">
+        <div className="hero-details mt-6 flex flex-col gap-5 md:mt-8 md:flex-row md:items-end md:justify-between">
           <motion.p {...fade(0.45)} className="max-w-md text-[15px] leading-relaxed text-fg/70 md:text-base">
             {studio.hero.description}
           </motion.p>
 
-          <motion.div {...fade(0.6)} className="flex flex-col gap-3 sm:flex-row">
+          <motion.div {...fade(0.6)} className="hero-actions flex flex-col gap-3 sm:flex-row">
             <MagneticButton href={WHATSAPP_URL} external variant="accent">{studio.hero.primaryCta}</MagneticButton>
             <MagneticButton href="#services" variant="ghost">
               {studio.hero.secondaryCta}
