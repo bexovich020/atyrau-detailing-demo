@@ -1,5 +1,5 @@
 import { media } from "@/lib/media";
-export const SITE_URL = "https://atyrau-detailing-demo.vercel.app";
+export const SITE_URL = "https://atyrau-detailing-demo-bexxx1.vercel.app";
 export const INSTAGRAM_URL = "https://www.instagram.com/atyrau_detailing_studio01/";
 export const MAP_URL = "https://2gis.kz/atyrau/firm/70000001054815561";
 export const studio = {

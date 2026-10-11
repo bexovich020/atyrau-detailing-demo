@@ -100,7 +100,7 @@ export default function Hero() {
       <p className="absolute bottom-7 left-5 text-[9px] tracking-wide text-muted md:bottom-8 md:left-1/2 md:-translate-x-1/2 md:text-[10px]">Имиджевый визуал · не фото работ студии</p>
       <motion.div
         {...fade(0.9)}
-        className="container-site pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between pb-6 md:pb-8"
+        className="container-site pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-end pb-6 md:justify-between md:pb-8"
       >
         <div className="hidden items-center gap-4 md:flex">
           <span className="relative block h-12 w-px overflow-hidden bg-fg/15" aria-hidden>
