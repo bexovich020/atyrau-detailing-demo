@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #07080a;
+  --fg: #ecedef;
+  --accent: #d9c5a0;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+  background-color: var(--bg);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: var(--accent);
+  color: #07080a;
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 4px;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-site px-5 sm:px-8 lg:px-12;
+  }
+
+  .display-xl {
+    @apply font-display font-medium uppercase leading-[0.86] tracking-[-0.01em];
+    font-size: clamp(3.25rem, 10vw, 9.5rem);
+  }
+
+  .display-lg {
+    @apply font-display font-medium uppercase leading-[0.9] tracking-[-0.005em];
+    font-size: clamp(2.65rem, 6.6vw, 6.6rem);
+  }
+
+  .display-md {
+    @apply font-display font-medium uppercase leading-[0.95];
+    font-size: clamp(1.85rem, 3.3vw, 3.1rem);
+  }
+
+  .meta {
+    @apply font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-muted;
+  }
+
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(236, 237, 239, 0.28);
+  }
+
+  .hairline {
+    @apply h-px w-full bg-line;
+  }
+
+  .grid-overlay {
+    background-image: linear-gradient(to right, rgba(236, 237, 239, 0.035) 1px, transparent 1px);
+    background-size: calc(100% / 12) 100%;
+  }
+}
+
+/* Film grain: a single fixed layer animated with transform only. */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: -50%;
+  z-index: 90;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Intro: pure CSS so content is never blocked if JS is slow. Total ≈ 1.05s. */
+.preloader {
+  animation: preloader-out 0.55s var(--ease-expo) 0.55s forwards;
+}
+.preloader-bar {
+  transform-origin: left;
+  animation: preloader-bar 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+.preloader-word {
+  animation: preloader-word 0.5s var(--ease-expo) forwards;
+}
+@keyframes preloader-out {
+  to {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+@keyframes preloader-bar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes preloader-word {
+  from { transform: translateY(105%); }
+  to { transform: translateY(0); }
+}
+.preloader {
+  clip-path: inset(0 0 0 0);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .preloader {
+    display: none;
+  }
+  .grain {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Client composition: retain Apex typography and motion, tailor spacing and media. */
+.hero-heading { font-size: clamp(4rem, 8.7vw, 8.8rem); line-height: .98; max-width: 9ch; }
+.business-gallery { display:grid; grid-template-columns:1.5fr .5fr .5fr; gap:16px; }
+.business-gallery figure { min-height:380px; }
+.proof-section { background:linear-gradient(115deg,#101217,#07080a 75%); }
+.location-panel { background: repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(217,197,160,.035) 48px), repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(217,197,160,.035) 48px),#111419; }
+.preloader { animation-duration:.35s; animation-delay:.15s; }
+@media(max-width:767px){
+ .hero-heading { font-size:clamp(3.6rem,15vw,5.4rem); line-height:1.02; }
+ .business-gallery { grid-template-columns:1fr 1fr; gap:12px; }
+ .business-gallery .gallery-main {grid-column:1/-1; min-height:0; aspect-ratio:16/10;}
+ .business-gallery figure {min-height:0; aspect-ratio:3/4;}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto;}
+ *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
+}

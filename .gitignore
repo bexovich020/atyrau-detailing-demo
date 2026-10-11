@@ -1,0 +1,13 @@
+node_modules/
+.next/
+.vercel/
+.env*
+*.tsbuildinfo
+next-env.d.ts
+.idea/
+audit-local.json
+research-*.png
+qa/
+personalize.cjs
+audit-*.json
+scripts/publish-github.cjs
